@@ -11,10 +11,21 @@
 <body>
   <header>
     <h1>Mi App Profesional</h1>
+    <nav>
+      {% if user.is_authenticated %}
+        <span>Hola, {{ user.username }}</span> |
+        <a href="{% url 'logout' %}">Cerrar sesión</a>
+      {% else %}
+        <a href="{% url 'login' %}">Ingresar</a> |
+        <a href="{% url 'register' %}">Registrarse</a>
+      {% endif %}
+    </nav>
   </header>
+
   <main>
     {% block content %}{% endblock %}
   </main>
+
   <footer>
     <p>© 2025 Mi App</p>
   </footer>
