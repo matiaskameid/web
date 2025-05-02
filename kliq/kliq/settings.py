@@ -119,7 +119,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 # Usa WhiteNoise para servir estáticos en producción
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 LOGIN_REDIRECT_URL = '/'

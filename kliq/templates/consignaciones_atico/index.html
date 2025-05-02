@@ -1,6 +1,55 @@
+{# WEB/kliq/templates/consignaciones_atico/index.html #}
 {% extends "base.html" %}
+{% load static %}
+
+{# Bloque para cargar sólo el CSS de esta app #}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'consignaciones_atico/css/styles.css' %}">
+{% endblock %}
+
 {% block title %}Consignaciones Atico{% endblock %}
+
 {% block content %}
-  <h2>Bienvenido a Consignaciones Atico</h2>
-  <p>Aquí irá tu interfaz portadas desde Streamlit.</p>
+  <h2>Liquidaciones de Consignaciones</h2>
+
+  {# Mensajes de éxito/error #}
+  {% if messages %}
+    <ul class="messages">
+      {% for msg in messages %}
+        <li class="{{ msg.tags }}">{{ msg }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {# Paso 1: formulario de subida #}
+    {{ upload_form.as_p }}
+
+    {% if editorial_list %}
+      {# Paso 2: editamos datos de contacto por editorial #}
+      <h3>Datos de contacto</h3>
+      {% for form in formset %}
+        <fieldset class="contacto-fieldset">
+          <legend><strong>{{ form.initial.editorial }}</strong></legend>
+          {{ form.editorial }} {# hidden #}
+          <p>{{ form.PROVEEDOR.label_tag }} {{ form.PROVEEDOR }}</p>
+          <p>{{ form.CONTACTO.label_tag }} {{ form.CONTACTO }}</p>
+          <p>{{ form.FONO_MAIL.label_tag }} {{ form.FONO_MAIL }}</p>
+          <p>{{ form.DESCUENTO.label_tag }} {{ form.DESCUENTO }}</p>
+          <p>{{ form.PAGO.label_tag }} {{ form.PAGO }}</p>
+          <p>{{ form.FECHA.label_tag }} {{ form.FECHA }}</p>
+        </fieldset>
+      {% endfor %}
+
+      {# Botones para guardar o generar liquidaciones #}
+      <button type="submit" name="save_contacts">Guardar Contactos</button>
+      <button type="submit" name="generate_liquidaciones">Generar Liquidaciones</button>
+
+    {% else %}
+      {# Si aún no hay editoriales, procesamos sólo el upload #}
+      <button type="submit" name="upload">Procesar Archivo</button>
+    {% endif %}
+  </form>
 {% endblock %}

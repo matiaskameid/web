@@ -1,7 +1,9 @@
-# consignaciones_atico/urls.py
+# WEB/kliq/consignaciones_atico/urls.py
 from django.urls import path
 from . import views
 
+app_name = 'consignaciones_atico'
+
 urlpatterns = [
-    path('', views.index, name='consignaciones_atico_home'),
+    path('', views.index, name='index'),
 ]
