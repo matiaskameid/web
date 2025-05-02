@@ -1,28 +1,41 @@
-<form method="post" enctype="multipart/form-data">
+{# WEB/kliq/templates/consignaciones_atico/index.html #}
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'consignaciones_atico/css/styles.css' %}">
+{% endblock %}
+
+{% block title %}Consignaciones Atico{% endblock %}
+
+{% block content %}
+  <h2>Liquidaciones de Consignaciones</h2>
+
+  {# Mensajes de éxito/error #}
+  {% if messages %}
+    <ul class="messages">
+      {% for msg in messages %}
+        <li class="{{ msg.tags }}">{{ msg }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-  
-    {# ————— FASE 1: sólo subo el archivo ————— #}
+
+    {# — FASE 1: Subida del Excel — #}
     {% if not editorial_list %}
       {{ upload_form.as_p }}
       <button type="submit" name="upload">Procesar Archivo</button>
-  
-    {# ————— FASE 2: ya procesé el archivo, muestro sólo contactos y acciones ————— #}
+
+    {# — FASE 2: Edición de contactos y generación de ZIP — #}
     {% else %}
-  
-      {# Mensajes de éxito/error #}
-      {% if messages %}
-        <ul class="messages">
-          {% for msg in messages %}
-            <li class="{{ msg.tags }}">{{ msg }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-  
+      {{ formset.management_form }}
       <h3>Datos de contacto</h3>
       {% for form in formset %}
         <fieldset class="contacto-fieldset">
           <legend><strong>{{ form.initial.editorial }}</strong></legend>
-          {{ form.editorial }} {# hidden #}
+          {{ form.editorial }} {# HiddenField #}
           <p>{{ form.PROVEEDOR.label_tag }} {{ form.PROVEEDOR }}</p>
           <p>{{ form.CONTACTO.label_tag }} {{ form.CONTACTO }}</p>
           <p>{{ form.FONO_MAIL.label_tag }} {{ form.FONO_MAIL }}</p>
@@ -31,10 +44,10 @@
           <p>{{ form.FECHA.label_tag }} {{ form.FECHA }}</p>
         </fieldset>
       {% endfor %}
-  
+
       <button type="submit" name="save_contacts">Guardar Contactos</button>
       <button type="submit" name="generate_liquidaciones">Generar Liquidaciones</button>
-  
     {% endif %}
+
   </form>
-  
+{% endblock %}
