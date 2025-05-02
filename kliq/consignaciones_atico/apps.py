@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
-class CoreConfig(AppConfig):
+
+class ConsignacionesAticoConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'core'
-    verbose_name = "Core"
+    name = 'consignaciones_atico'

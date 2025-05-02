@@ -13,4 +13,6 @@ urlpatterns = [
 
     # ruta para registro de nuevo usuario
     path('accounts/register/', register, name='register'),
+    
+    path('consignaciones-atico/', include('consignaciones_atico.urls')),
 ]

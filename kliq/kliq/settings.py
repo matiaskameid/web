@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core.apps.CoreConfig',  # ← tu app principal
+    'core',  # ← tu app principal
+    'consignaciones_atico',
 ]
 
 MIDDLEWARE = [
