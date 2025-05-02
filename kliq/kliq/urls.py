@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
 from core.views import home, register
+from core.views import debug_users
 
 urlpatterns = [
+    path("debug-users/", debug_users),
     path('', home, name='home'),
     path('admin/', admin.site.urls),
 

@@ -3,6 +3,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from django.http import JsonResponse
+from django.contrib.auth import get_user_model
 
 def home(request):
     """
@@ -26,3 +28,14 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
+
+def debug_users(request):
+    """
+    Devuelve un JSON con todos los usuarios y sus flags de staff/superuser.
+    SOLO para debugging; retíralo después.
+    """
+    User = get_user_model()
+    users = list(
+        User.objects.values("username", "is_staff", "is_superuser")
+    )
+    return JsonResponse(users, safe=False)
