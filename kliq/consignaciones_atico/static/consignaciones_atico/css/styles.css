@@ -1,0 +1,29 @@
+.editorial-panel {
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
+  .editorial-panel summary {
+    font-weight: bold;
+    cursor: pointer;
+    list-style: none;       /* quita el triángulo por defecto si lo prefieres */
+    padding: 0.25rem 0.5rem;
+  }
+  .editorial-panel[open] {
+    background: #f9f9f9;
+  }
+  .contact-fields {
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+  }
+  
+  /* feedback */
+.feedback { margin: 1.5rem 0; padding: 1rem; border: 1px solid #ddd; border-radius:4px; background:#f9f9f9; }
+.feedback .success { font-weight:bold; color: #276749; /* green */ }
+.feedback .info    { font-style: italic; color: #2c5282; /* blue */ }
+.feedback ul       { margin: 0.5rem 0 1rem 1.2rem; }
+.btn-download {
+  display: inline-block; padding: .5rem .8rem; background: #4a5568; color:#fff; text-decoration:none; border-radius:4px;
+}
+.btn-download:hover { background: #2d3748; }

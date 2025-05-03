@@ -1,4 +1,3 @@
-{# WEB/kliq/templates/consignaciones_atico/index.html #}
 {% extends "base.html" %}
 {% load static %}
 
@@ -11,7 +10,7 @@
 {% block content %}
   <h2>Liquidaciones de Consignaciones</h2>
 
-  {# Mensajes de éxito/error #}
+  {# Mensajes de alerta #}
   {% if messages %}
     <ul class="messages">
       {% for msg in messages %}
@@ -23,31 +22,80 @@
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
+    {# — Sólo mostrar fichero cuando ya haya editoriales (fase 2) — #}
+    {% if editorial_list and uploaded_file_name %}
+      <p><strong>Archivo subido:</strong> {{ uploaded_file_name }}</p>
+    {% endif %}
+
     {# — FASE 1: Subida del Excel — #}
     {% if not editorial_list %}
       {{ upload_form.as_p }}
       <button type="submit" name="upload">Procesar Archivo</button>
 
-    {# — FASE 2: Edición de contactos y generación de ZIP — #}
+    {# — FASE 2: Edición de contactos y generación — #}
     {% else %}
-      {{ formset.management_form }}
-      <h3>Datos de contacto</h3>
-      {% for form in formset %}
-        <fieldset class="contacto-fieldset">
-          <legend><strong>{{ form.initial.editorial }}</strong></legend>
-          {{ form.editorial }} {# HiddenField #}
-          <p>{{ form.PROVEEDOR.label_tag }} {{ form.PROVEEDOR }}</p>
-          <p>{{ form.CONTACTO.label_tag }} {{ form.CONTACTO }}</p>
-          <p>{{ form.FONO_MAIL.label_tag }} {{ form.FONO_MAIL }}</p>
-          <p>{{ form.DESCUENTO.label_tag }} {{ form.DESCUENTO }}</p>
-          <p>{{ form.PAGO.label_tag }} {{ form.PAGO }}</p>
-          <p>{{ form.FECHA.label_tag }} {{ form.FECHA }}</p>
-        </fieldset>
+      <div id="contacts-section">
+        {{ formset.management_form }}
+
+        <h3>Completa los datos de contacto para cada editorial</h3>
+        {% for form in formset %}
+        <details class="editorial-panel">
+          <summary>Datos para {{ form.initial.editorial }}</summary>
+      
+          {{ form.editorial }} {# HiddenInput #}
+          <div class="contact-fields">
+            <p>{{ form.PROVEEDOR.label_tag }} {{ form.PROVEEDOR }}</p>
+            <p>{{ form.CONTACTO.label_tag }}  {{ form.CONTACTO }}</p>
+            <p>{{ form.FONO_MAIL.label_tag }} {{ form.FONO_MAIL }}</p>
+            <p>{{ form.DESCUENTO.label_tag }} {{ form.DESCUENTO }}</p>
+            <p>{{ form.PAGO.label_tag }}      {{ form.PAGO }}</p>
+            <p>{{ form.FECHA.label_tag }}     {{ form.FECHA }}</p>
+          </div>
+        </details>
       {% endfor %}
 
-      <button type="submit" name="save_contacts">Guardar Contactos</button>
-      <button type="submit" name="generate_liquidaciones">Generar Liquidaciones</button>
+        <button type="submit" name="save_contacts">Guardar Contactos</button>
+        <button type="submit" name="generate_liquidaciones">Generar Liquidaciones</button>
+      </div>
+
+      {% if generated_files %}
+      <div class="feedback">
+        <p class="success">✅ Liquidaciones generadas para:</p>
+        <ul>
+          {% for name in generated_files %}
+            <li>📄 {{ name }}</li>
+          {% endfor %}
+        </ul>
+    
+        <p>
+          <a
+            href="data:application/zip;base64,{{ zip_b64 }}"
+            download="Liquidaciones.zip"
+            class="btn-download"
+          >
+            📦 Descargar ZIP con todas las liquidaciones
+          </a>
+        </p>
+    
+        {% if no_data_editorials %}
+          <p class="info">
+            ℹ️ No se generaron liquidaciones para:
+          </p>
+          <ul>
+            {% for ed in no_data_editorials %}
+              <li>{{ ed }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
     {% endif %}
 
+      {# Scroll suave a contacts-section #}
+      <script>
+        document
+         .getElementById('contacts-section')
+         .scrollIntoView({ behavior: 'smooth' });
+      </script>
+    {% endif %}
   </form>
 {% endblock %}
